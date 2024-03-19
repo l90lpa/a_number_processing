@@ -25,7 +25,7 @@ Assuming that the Developer tab has been enabled. To enable the macro:
 
 Assuming that the macro has been imported, or is otherwise available (see below for more discussion on this) Excel documents can be processed as follows:
 1. Copy the target Excel document you wish to process.
-1. For each sheet you wich to process:
+1. For each sheet you which to process:
     - Open the sheet.
     - Run the macro. There are atleast two ways in which the macro can be run:
         1. In the Visual Basic Editor, click the "run" button (a green triangle), select the macro, and click `Run`.
