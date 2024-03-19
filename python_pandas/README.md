@@ -11,7 +11,7 @@ This Python program contains only a single file, and its usage can be queried us
 The intended workflow for processing Excel documents is to:
 1. At the command-line, use this program to convert the A-numbers in an Excel document to UIDs, for example:
 
-`python ./a_number_processing /path/to/file_to_process.csv -s /path/to/a_number_to_uid.json -cn 0 2`
+`python ./a_number_processing /path/to/file_to_process.xlsx -s /path/to/a_number_to_uid.json -cn 0 2`
 
 ## Design:
 
