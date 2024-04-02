@@ -2,6 +2,7 @@ Attribute VB_Name = "a_number_processing"
 Sub ReplaceANumbersWithUIDs()
     Dim find_a_numbers As New RegExp
     Dim non_digits As New RegExp
+    Dim sheet As Worksheet
     Dim cell As Range
     Dim match As Object
     Dim prevUid As Long
@@ -33,31 +34,32 @@ Sub ReplaceANumbersWithUIDs()
         prevUid = Application.Max(a_number_2_uid.items)
     End If
     
-    ' Loop over all cells in the active worksheet (`ActiveSheet.Range` could be be swapped with
-    ' `Selection` to only process the selected/highlighted cells)
-    For Each cell In ActiveSheet.UsedRange
-        ' Check if the cell contains text
-        If Not IsEmpty(cell.value) And IsString(cell.value) Then
-            ' For cells containing text, find the A-numbers
-            For Each match In find_a_numbers.Execute(cell.value)
-                ' Canonicalize the A-number
-                a_number = CLng(non_digits.Replace(match.value, ""))
-                
-                ' Check if the A-number is already in the dictionary
-                If Not a_number_2_uid.Exists(a_number) Then
-                    ' Generate a unique identifier (UID) for any new A-numbers
-                    prevUid = prevUid + 1
-                    a_number_2_uid.Add a_number, prevUid
-                End If
-                
-                ' Get the UID for the A-number from the dictionary
-                uid = "UID-" & CStr(a_number_2_uid(a_number))
-                
-                ' Replace the matched A-number in the cell with the UID
-                cell.value = Replace(cell.value, match.value, uid, 1, -1, vbTextCompare)
-            Next
-        End If
-    Next cell
+    ' Loop over all cells in all sheets in the workbook
+    For Each sheet In ActiveWorkbook.Worksheets
+        For Each cell In sheet.UsedRange
+            ' Check if the cell contains text
+            If Not IsEmpty(cell.value) And IsString(cell.value) Then
+                ' For cells containing text, find the A-numbers
+                For Each match In find_a_numbers.Execute(cell.value)
+                    ' Canonicalize the A-number
+                    a_number = CLng(non_digits.Replace(match.value, ""))
+                    
+                    ' Check if the A-number is already in the dictionary
+                    If Not a_number_2_uid.Exists(a_number) Then
+                        ' Generate a unique identifier (UID) for any new A-numbers
+                        prevUid = prevUid + 1
+                        a_number_2_uid.Add a_number, prevUid
+                    End If
+                    
+                    ' Get the UID for the A-number from the dictionary
+                    uid = "UID-" & CStr(a_number_2_uid(a_number))
+                    
+                    ' Replace the matched A-number in the cell with the UID
+                    cell.value = Replace(cell.value, match.value, uid, 1, -1, vbTextCompare)
+                Next
+            End If
+        Next cell
+    Next sheet
     
     SaveDictionaryToFile a_number_2_uid, filepath
 End Sub
